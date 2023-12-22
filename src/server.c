@@ -42,7 +42,18 @@ int init_server()
         WSACleanup();
         return -1;
     }
-    printf("[SERVER]: Socket binded");
+    freeaddrinfo(result);
+    printf("[SERVER]: Socket binded\n");
+
+    call_result = listen(serverSocket, SOMAXCONN);
+    if (call_result == SOCKET_ERROR)
+    {
+        printf("[SERVER]: Wasn't able to start listening on socket -> aborting\n");
+        closesocket(serverSocket);
+        WSACleanup();
+        return -1;
+    }
+    printf("[SERVER]: Listening\n");
 
     return 0;
 }

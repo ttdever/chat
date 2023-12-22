@@ -7,6 +7,9 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 
+SOCKET serverSocket = INVALID_SOCKET;
+SOCKET clientSocket = INVALID_SOCKET;
+
 struct addrinfo *result = NULL;
 struct addrinfo hints;
 
@@ -14,7 +17,10 @@ struct addrinfo hints;
 #define SOCKET_TYPE SOCK_STREAM       // STREAM
 #define SOCKET_PROTOCOL IPPROTO_TCP   // TCP
 
+#define BUFFER_LEN 512
+
 int init_server();
+int handle();
 
 #endif
 #endif

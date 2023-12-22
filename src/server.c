@@ -6,7 +6,7 @@ int init_server()
 {
     printf("[SYS]: Starting in server mode...\n");
 
-    SOCKET serverSocket = socket(
+    serverSocket = socket(
         SOCKET_ADDRESS_FAMILY,
         SOCKET_TYPE,
         SOCKET_PROTOCOL);
@@ -54,6 +54,68 @@ int init_server()
         return -1;
     }
     printf("[SERVER]: Listening\n");
+
+    clientSocket = accept(serverSocket, NULL, NULL);
+    if (clientSocket == INVALID_SOCKET)
+    {
+        printf("[SERVER]: Wasn't able to accept client\n");
+        closesocket(serverSocket);
+        WSACleanup();
+        return -1;
+    }
+
+    closesocket(serverSocket);
+    return handle();
+}
+
+int handle()
+{
+    int call_result, call_send_result;
+    int bufferLength = BUFFER_LEN;
+    char recvBuffer[BUFFER_LEN];
+
+    int recievedLength;
+    int sendLength;
+
+    do
+    {
+        recievedLength = recv(clientSocket, recvBuffer, bufferLength, 0);
+        if (recievedLength > 0)
+        {
+            printf("[SERVER]: Recieved %d bytes\n", recievedLength);
+
+            sendLength = send(clientSocket, recvBuffer, recievedLength, 0);
+            if (sendLength == SOCKET_ERROR)
+            {
+                printf("[SERVER][ERR]: Wasn't able to send response\n");
+                closesocket(clientSocket);
+                WSACleanup();
+                return -1;
+            }
+            printf("[SERVER]: Sent %d bytes in response\n", sendLength);
+        }
+        else if (recievedLength == 0)
+        {
+            printf("[SERVER]: Closing connection...\n");
+        }
+        else
+        {
+            printf("[SERVER][ERR]: Failed to recieve data from client -> aborting");
+            closesocket(clientSocket);
+            WSACleanup();
+            return -1;
+        }
+
+    } while (recievedLength > 0);
+
+    call_result = shutdown(clientSocket, SD_SEND);
+    if (call_result == SOCKET_ERROR)
+    {
+        printf("[SERVER] Shutdown failed");
+        closesocket(clientSocket);
+        WSACleanup();
+        return -1;
+    }
 
     return 0;
 }

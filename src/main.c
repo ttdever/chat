@@ -25,9 +25,8 @@ int main()
     printf("[SYS]: WSA initialized\n");
 
 #if PROG_MODE == 0
-    init_server();
+    return init_server();
 #elif PROG_MODE == 1
 #include "client.h"
 #endif
-    return 0;
 }

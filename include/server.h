@@ -7,11 +7,11 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 
-SOCKET serverSocket = INVALID_SOCKET;
-SOCKET clientSocket = INVALID_SOCKET;
+extern SOCKET serverSocket;
+extern SOCKET clientSocket;
 
-struct addrinfo *result = NULL;
-struct addrinfo hints;
+extern struct addrinfo *result;
+extern struct addrinfo hints;
 
 #define SOCKET_ADDRESS_FAMILY AF_INET // IP_V4
 #define SOCKET_TYPE SOCK_STREAM       // STREAM

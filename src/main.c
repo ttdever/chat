@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
 #include "config.h"
 
 #if PROG_MODE == 0
@@ -9,11 +11,10 @@
 
 WSADATA wsaData;
 
-#pragma comment(lib, "ws2_32")
-
-int main()
+int main(int argc, char **argv)
 {
     printf("[SYS]: Started\n");
+
     // Init WSAS:
     int wsaInitResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
     if (wsaInitResult != 0)
@@ -25,8 +26,10 @@ int main()
     printf("[SYS]: WSA initialized\n");
 
 #if PROG_MODE == 0
-    return init_server();
+    init_server();
 #elif PROG_MODE == 1
-#include "client.h"
+    init_client(argc, argv);
 #endif
+
+    return 0;
 }

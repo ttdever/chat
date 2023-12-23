@@ -2,6 +2,12 @@
 #if PROG_MODE == 0
 #include "server.h"
 
+SOCKET serverSocket = INVALID_SOCKET;
+SOCKET clientSocket = INVALID_SOCKET;
+
+struct addrinfo *result = NULL;
+struct addrinfo hints;
+
 int init_server()
 {
     printf("[SYS]: Starting in server mode...\n");
@@ -83,6 +89,13 @@ int handle()
         if (recievedLength > 0)
         {
             printf("[SERVER]: Recieved %d bytes\n", recievedLength);
+
+            printf("[SERVER][IN]: Recieved message:");
+            for (int i = 0; i < recievedLength; ++i)
+            {
+                printf("%c", recvBuffer[i]);
+            }
+            printf("\n");
 
             sendLength = send(clientSocket, recvBuffer, recievedLength, 0);
             if (sendLength == SOCKET_ERROR)

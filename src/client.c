@@ -5,7 +5,6 @@
 
 int init_client(int argc, char **argv)
 {
-    WSADATA wsaData;
     SOCKET clientSocket = INVALID_SOCKET;
     struct addrinfo *result = NULL, *ptr = NULL, hints;
     const char *sendbuf = "BEEP BOOP BEEP BOOP!";
@@ -30,7 +29,7 @@ int init_client(int argc, char **argv)
     {
 
         clientSocket = socket(ptr->ai_family, ptr->ai_socktype,
-                               ptr->ai_protocol);
+                              ptr->ai_protocol);
         if (clientSocket == INVALID_SOCKET)
         {
             printf("[CLIENT][ERR]: Socket init failed");

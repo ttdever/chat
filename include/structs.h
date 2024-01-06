@@ -6,7 +6,7 @@
 typedef struct CharFunction
 {
     char input[MAX_INPUT_LENGTH];
-    void (*function)(int argc, char **argv, int *out);
+    void (*function)(int argc, char **argv, void *out);
 } CharFunction;
 
 #endif

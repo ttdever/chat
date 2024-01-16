@@ -29,11 +29,17 @@ void display_welcomeMessage()
         exit(1);
     }
 
-    functionToCall(NULL, NULL, NULL);
+    functionToCall(0, '\0', NULL);
 }
 
 void display_createUser(int argc, char **argv, void *out)
 {
+    (void)argc;
+    (void)argv;
+    (void)out;
+
+    User *newUser = calloc(sizeof(User), 1);
+
     if (currentUser == NULL)
     {
         currentUser = calloc(sizeof(User), 1);
@@ -51,10 +57,21 @@ void display_createUser(int argc, char **argv, void *out)
 
     char newUsername[MAX_USERNAME_LENGTH];
     fgets(newUsername, MAX_USERNAME_LENGTH, stdin);
+    newUsername[strlen(newUsername) - 1] = '\0';
+
+    strcpy(newUser->username, newUsername);
+    strcpy(newUser->ip_address, "127.0.0.1");
+    strcpy(newUser->port, "1337");
+
+    currentUser = newUser;
+    user_saveUserToMemory(*currentUser);
 }
 
 void display_readUserFromMem(int argc, char **argv, void *out)
 {
+    (void)argc;
+    (void)argv;
+    (void)out;
 }
 
 void display_clearConsole()

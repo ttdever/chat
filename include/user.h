@@ -19,8 +19,8 @@ int user_setIpaddress(User *user, const char *ip_address);
 int user_setPort(User *user, const char *port);
 void user_printUserInfo(User *user);
 
-User *user_getUserFromMemory();
-int *user_saveUserToMemory();
+User user_getUserFromMemory();
+int user_saveUserToMemory(User user);
 
 int isValidIPv4(const char *ip_address);
 int isValidPort(const char *port);

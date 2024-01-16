@@ -4,7 +4,7 @@ SRC_DIR = src
 INCLUDE_DIR = include
 OBJ_DIR = out
 BIN_DIR = bin
-LDFLAGS = -lws2_32
+LDFLAGS = -lws2_32 -lshlwapi
 
 # Collect all .c files in the source directory
 SRC_FILES = $(wildcard $(SRC_DIR)/*.c)
@@ -31,6 +31,10 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 
 # Clean rule
 clean:
-	rm -rf $(OBJ_DIR)/*.o $(BIN_DIR)/*
+	del /Q $(OBJ_DIR)\*.o
+	del /Q $(BIN_DIR)\*
+
+run:
+	$(BIN_DIR)/chat.exe
 
 .PHONY: all clean

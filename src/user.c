@@ -1,7 +1,9 @@
-#include "user.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <shlobj.h>
+#include <shlwapi.h>
+#include "user.h"
 
 // User struct functions:
 User *user_createNewUser(const char *username, const char *ip_address, const char *port)
@@ -68,6 +70,52 @@ void user_printUserInfo(User *user)
     printf("\tusername: \"%s\"\n", user->username);
     printf("\tip address: \"%s\"\n", user->ip_address);
     printf("\tport: \"%s\"\n", user->port);
+}
+
+User user_getUserFromMemory()
+{
+    User readedUser = {.username = "N/A", .ip_address = "127.0.0.1", .port = "1337"};
+
+    return readedUser;
+}
+
+int user_saveUserToMemory(User user)
+{
+    char pathBuffer[MAX_PATH];
+    if (SUCCEEDED(SHGetFolderPathA(NULL, CSIDL_LOCAL_APPDATA, NULL, 0, pathBuffer)))
+    {
+        PathAppend(pathBuffer, TEXT("chatApp"));
+        CreateDirectoryA(pathBuffer, NULL);
+
+        PathAppend(pathBuffer, TEXT("USER_INFO.txt"));
+    }
+
+    HANDLE hFile = CreateFile(pathBuffer, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    if (hFile == INVALID_HANDLE_VALUE)
+    {
+        CloseHandle(hFile);
+        return 1;
+    }
+
+    char convertedUser[MAX_USERNAME_LENGTH + 5 + MAX_IP_LENGTH + 3 + MAX_PORT_LENGTH + 5 + 3];
+    strcpy(convertedUser, "Name:");
+    strcat(convertedUser, user.username);
+    strcat(convertedUser, "\n");
+    strcat(convertedUser, "ip:");
+    strcat(convertedUser, user.ip_address);
+    strcat(convertedUser, "\n");
+    strcat(convertedUser, "port:");
+    strcat(convertedUser, user.port);
+
+    DWORD writtenBytes;
+    if (!WriteFile(hFile, convertedUser, strlen(convertedUser), &writtenBytes, NULL))
+    {
+        CloseHandle(hFile);
+        return 1;
+    }
+
+    CloseHandle(hFile);
+    return 0;
 }
 
 // Field specific verifications:
